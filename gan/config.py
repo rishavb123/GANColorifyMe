@@ -1,4 +1,4 @@
-update_data_file = True
+update_data_file = False
 data_file = './data/gray.npy'
 
 BUFFER_SIZE = 100000
@@ -15,3 +15,5 @@ checkpoint_frequency = 20
 checkpoint_restore = False
 checkpoint_dir = './training_checkpoints'
 log_dir = './logs'
+
+use_tensorboard = False

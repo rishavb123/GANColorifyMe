@@ -7,6 +7,7 @@ sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 
 import time
+import datetime
 
 import numpy as np
 import tensorflow as tf
@@ -20,16 +21,6 @@ from gan.discriminative_network import make_discriminator_model
 
 from dataset.preproccesing import load_data, normalize
 
-# import glob
-# import imageio
-# import matplotlib.pyplot as plt
-# import numpy as np
-# import os
-# import PIL
-# import tensorflow as tf
-# import time
-
-# from IPython import display
 
 if os.path.exists(data_file) and not update_data_file:
     gray = np.load(data_file)
@@ -62,8 +53,9 @@ checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer, discri
 
 seed = tf.random.normal([NUM_EXAMPLES_TO_GENERATE, NOISE_DIM])
 
-gen_tensorboard = tf.keras.callbacks.TensorBoard(log_dir=log_dir + '/generator')
-disc_tensorboard = tf.keras.callbacks.TensorBoard(log_dir=log_dir + '/discriminator')
+if use_tensorboard:
+    gen_tensorboard = tf.keras.callbacks.TensorBoard(log_dir=log_dir + '/generator')
+    disc_tensorboard = tf.keras.callbacks.TensorBoard(log_dir=log_dir + '/discriminator')
 
 @tf.function
 def train_step(images):
@@ -99,7 +91,7 @@ def generate_and_save_images(model, epoch, test_input):
     plt.savefig('./images/epoch_{:04d}.png'.format(epoch))
     plt.close()
 
-def train(dataset, epochs):
+def train(dataset, epochs, progress_bar_width=80, progress_char='+', empty_char='-'):
 
     for epoch in range(epochs):
         start = time.time()
@@ -107,23 +99,33 @@ def train(dataset, epochs):
         gen_loss = -1
         disc_loss = -1
 
+        cur_time = time.time()
+        i = 0
+        l = BUFFER_SIZE // BATCH_SIZE
+
         for image_batch in dataset:
+            w = i * progress_bar_width // l
+            s = int(time.time() - cur_time)
+            print('[' + progress_char * w + empty_char * (progress_bar_width - w) + ']', i, '/', l, datetime.timedelta(seconds=s), end='\r')
             gen_loss, disc_loss = train_step(image_batch)
+            i += 1
         
-        gen_tensorboard.on_epoch_end(epoch + 1, {'loss': gen_loss})
-        disc_tensorboard.on_epoch_end(epoch + 1, {'loss': disc_loss})
+        if use_tensorboard:
+            gen_tensorboard.on_epoch_end(epoch + 1, {'loss': gen_loss})
+            disc_tensorboard.on_epoch_end(epoch + 1, {'loss': disc_loss})
         
         generate_and_save_images(generator, epoch + 1, seed)
 
         if (epoch + 1) % checkpoint_frequency == 0:
             checkpoint.save(file_prefix = checkpoint_prefix)
 
-        print ('Time for epoch {} is {} sec'.format(epoch + 1, time.time()-start))
+        print ('Time for epoch {} is {} sec'.format(epoch + 1, time.time()-start), ' ' * (progress_bar_width + 10))
 
         generate_and_save_images(generator, epochs, seed)
 
-    gen_tensorboard.on_train_end('_')
-    disc_tensorboard.on_train_end('_')
+    if use_tensorboard:
+        gen_tensorboard.on_train_end('_')
+        disc_tensorboard.on_train_end('_')
 
 if checkpoint_restore:
     checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
