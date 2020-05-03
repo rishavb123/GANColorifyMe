@@ -4,3 +4,4 @@ images
 models
 data
 logs
+training_checkpoints
