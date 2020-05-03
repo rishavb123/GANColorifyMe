@@ -3,13 +3,13 @@ import os
 import numpy as np
 import cv2
 
-def load_data():
+def load_data(image_dir):
     faces = []
     gray = []
 
-    for fname in os.listdir('./images/color/'):
-        faces.append(cv2.imread("./images/color/" + fname))
-        g = cv2.imread("./images/grayscale/" + fname)
+    for fname in os.listdir(image_dir + '/color/'):
+        faces.append(cv2.imread(image_dir + "/color/" + fname))
+        g = cv2.imread(image_dir + "/grayscale/" + fname)
         gcopy = []
         for i in range(len(g)):
             gcopy.append([])
@@ -19,19 +19,19 @@ def load_data():
 
     return np.array(faces, float), np.array(gray, float)
 
-def load_color_data():
+def load_color_data(image_dir):
     faces = []
 
-    for fname in os.listdir('./images/color/'):
-        faces.append(cv2.imread("./images/color/" + fname))
+    for fname in os.listdir(image_dir + '/color/'):
+        faces.append(cv2.imread(image_dir + "/color/" + fname))
 
     return np.array(faces, float)
 
-def load_gray_data():
+def load_gray_data(image_dir):
     gray = []
 
-    for fname in os.listdir('./images/color/'):
-        g = cv2.imread("./images/grayscale/" + fname)
+    for fname in os.listdir(image_dir + '/color/'):
+        g = cv2.imread(image_dir + "/grayscale/" + fname)
         gcopy = []
         for i in range(len(g)):
             gcopy.append([])
