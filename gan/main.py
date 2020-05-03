@@ -125,8 +125,12 @@ def train(dataset, epochs):
     gen_tensorboard.on_train_end('_')
     disc_tensorboard.on_train_end('_')
 
+if checkpoint_restore:
+    checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
+train(dataset, EPOCHS)
+
 def display_image(epoch_no):
-    return PIL.Image.open('image_at_epoch_{:04d}.png'.format(epoch_no))
+    return PIL.Image.open('./images/image_at_epoch_{:04d}.png'.format(epoch_no))
 display_image(EPOCHS)
 
 s = str(int(time.time() * 1000))
