@@ -34,7 +34,7 @@ def load_data(image_dir, progress_bar_width=80, progress_char='+', empty_char='-
             for i in range(len(g)):
                 gcopy.append([])
                 for j in range(len(g[i])):
-                    gcopy[i].append(g[i][j][0])
+                    gcopy[i].append([g[i][j][0]])
             gray.append(gcopy)
     log('[' + progress_char * progress_bar_width + ']', l, '/', l)
     log('Finished loading data - Took', int(time.time() - cur_time), 'seconds')
