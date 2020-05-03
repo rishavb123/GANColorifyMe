@@ -1,8 +1,10 @@
 import tensorflow as tf
 
+from gan.config import NOISE_DIM
+
 def make_generator_model():
     model = tf.keras.Sequential()
-    model.add(tf.keras.layers.Dense(7*7*256, use_bias=False, input_shape=(100,)))
+    model.add(tf.keras.layers.Dense(7*7*256, use_bias=False, input_shape=(NOISE_DIM,)))
     model.add(tf.keras.layers.BatchNormalization())
     model.add(tf.keras.layers.LeakyReLU())
 
