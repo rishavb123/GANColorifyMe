@@ -11,6 +11,7 @@ import time
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import PIL
 
 
 from gan.config import *
@@ -95,7 +96,7 @@ def generate_and_save_images(model, epoch, test_input):
         plt.imshow(normalize(predictions[i, :, :, 0], input_range=(-1, 1), output_range=(0, 255)), cmap='gray')
         plt.axis('off')
 
-    plt.savefig('image_at_epoch_{:04d}.png'.format(epoch))
+    plt.savefig('./images/epoch_{:04d}.png'.format(epoch))
     plt.close()
 
 def train(dataset, epochs):
@@ -109,7 +110,8 @@ def train(dataset, epochs):
         for image_batch in dataset:
             gen_loss, disc_loss = train_step(image_batch)
         
-        gen_tensorboard
+        gen_tensorboard.on_epoch_end(epoch + 1, {'loss': gen_loss})
+        disc_tensorboard.on_epoch_end(epoch + 1, {'loss': disc_loss})
         
         generate_and_save_images(generator, epoch + 1, seed)
 
@@ -119,3 +121,15 @@ def train(dataset, epochs):
         print ('Time for epoch {} is {} sec'.format(epoch + 1, time.time()-start))
 
         generate_and_save_images(generator, epochs, seed)
+
+    gen_tensorboard.on_train_end('_')
+    disc_tensorboard.on_train_end('_')
+
+def display_image(epoch_no):
+    return PIL.Image.open('image_at_epoch_{:04d}.png'.format(epoch_no))
+display_image(EPOCHS)
+
+s = str(int(time.time() * 1000))
+os.mkdir('./models/' + s)
+generator.save('models/' + s + '/generator') 
+discriminator.save('models/' + s + '/discriminator') 
