@@ -13,11 +13,13 @@ import tensorflow as tf
 
 from dataset.preproccesing import normalize
 
+from gan.model_path import gen_path
+
 capture = cv2.VideoCapture(0)
 
 classifier = cv2.CascadeClassifier('../dataset/haarcascade_frontalface_default.xml')
 
-generator = tf.keras.models.load_model('./models/1588550609579/generator')
+generator = tf.keras.models.load_model(gen_path)
 
 noise = tf.random.normal([1, 100])
 
