@@ -39,12 +39,12 @@ def load_data(image_dir, progress_bar_width=80, progress_char='+', empty_char='-
     log('[' + progress_char * progress_bar_width + ']', l, '/', l)
     log('Finished loading data - Took', int(time.time() - cur_time), 'seconds')
     if load_color and load_gray:
-        return np.array(faces, float), np.array(gray, float)
+        return np.array(faces, np.float32), np.array(gray, np.float32)
     elif load_color:
-        return np.array(faces, float)
+        return np.array(faces, np.float32)
     elif load_gray:
-        return np.array(gray, float)
-    return np.array([], float)
+        return np.array(gray, np.float32)
+    return np.array([], np.float32)
 
 def normalize(faces, output_range=(-1, 1), input_range=(0, 255)):
     return (faces - input_range[0]) * (output_range[1] - output_range[0]) / (input_range[1] - input_range[0]) + output_range[0]
