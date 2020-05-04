@@ -132,10 +132,13 @@ if checkpoint_restore:
 train(dataset, EPOCHS)
 
 def display_image(epoch_no):
-    return PIL.Image.open('./images/image_at_epoch_{:04d}.png'.format(epoch_no))
+    return PIL.Image.open('./images/epoch_{:04d}.png'.format(epoch_no))
 display_image(EPOCHS)
 
 s = str(int(time.time() * 1000))
 os.mkdir('./models/' + s)
+os.mkdir('./models/' + s + '/discriminator')
+os.mkdir('./models/' + s + '/generator')
+
 generator.save('models/' + s + '/generator') 
 discriminator.save('models/' + s + '/discriminator') 

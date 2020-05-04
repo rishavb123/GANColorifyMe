@@ -12,7 +12,7 @@ LEARNING_RATE = 1e-4
 NUM_EXAMPLES_TO_GENERATE = 16
 
 checkpoint_frequency = 20
-checkpoint_restore = False
+checkpoint_restore = True
 checkpoint_dir = './training_checkpoints'
 log_dir = './logs'
 
