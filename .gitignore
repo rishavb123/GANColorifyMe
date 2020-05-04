@@ -5,4 +5,4 @@ models
 data
 logs
 training_checkpoints
-*.npy
+inputs
