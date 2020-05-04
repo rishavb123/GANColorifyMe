@@ -42,7 +42,7 @@ while True:
         gen_img = normalize(gen_img, input_range=(-1, 1), output_range=(0, 255))
         gen_img = np.reshape(gen_img, (28,28))
         gen_img = cv2.resize(cv2.cvtColor(gen_img, cv2.COLOR_GRAY2BGR), (w, h))
-        img[y: y + h, x: x + h] = gen_img
+        img[y: y + h, x: x + w] = gen_img
 
     cv2.imshow('img', img)
     k = cv2.waitKey(30) & 0xff
