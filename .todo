@@ -1,0 +1,12 @@
+    - Create a Neural Network to increase resolution of color image
+        - keywords: super resolution 
+    - Create something to match the image of my face (from the live webcam stream) to the noise with the best match
+        - Could use a genetic algorithm, but neural network might be better
+            - genetic algorithm would have to be run every frame in a theoretic view script while neural network can be done with a simple feedforward every frame
+        - minimize the error between the the generated image and the image from the webcam
+        - neural network structure: (28, 28) -> (1, 100) [without color]
+            - or (28, 28, 3) -> (1, 100) [with color]
+            - or (28, 28) -> (1, 100) [with color (color must be inferred by neural network)]
+        - loss: MSE(generator(nn(webcam_face)), gray(webcam_face))
+            - or MSE(colorify(generator(nn(webcam_face))), webcam_face)
+        - make view script to pass webcam image into network and overlay generated image
