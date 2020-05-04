@@ -54,6 +54,7 @@ checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer, discri
 seed = tf.random.normal([NUM_EXAMPLES_TO_GENERATE, NOISE_DIM])
 
 if use_tensorboard:
+    log_dir= ".\\logs\\fit\\"+datetime.now().strftime("%Y%m%d-%H%M%S")
     gen_tensorboard = tf.keras.callbacks.TensorBoard(log_dir=log_dir + '/generator')
     disc_tensorboard = tf.keras.callbacks.TensorBoard(log_dir=log_dir + '/discriminator')
 
