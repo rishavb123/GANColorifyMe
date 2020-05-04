@@ -15,13 +15,16 @@ from dataset.preproccesing import normalize
 
 from gan.model_path import gen_path
 
+rand_start = False
+r = 0.9
+
 capture = cv2.VideoCapture(0)
 
 classifier = cv2.CascadeClassifier('../dataset/haarcascade_frontalface_default.xml')
 
 generator = tf.keras.models.load_model(gen_path)
 
-noise = tf.random.normal([1, 100])
+noise = tf.random.normal([1, 100]) if rand_start else np.load('./inputs/best_noise_input.npy')
 
 while True:
     cur_time = time.time()
@@ -33,7 +36,7 @@ while True:
         faces.sort(key=lambda rect: -rect[2] * rect[3])
         x, y, w, h = faces[0]
 
-        noise = 0.9 * noise + 0.1 * tf.random.normal([1, 100])
+        noise = r * noise + (1 - r) * tf.random.normal([1, 100])
 
         gen_img = generator(noise, training=False)
         gen_img = normalize(gen_img, input_range=(-1, 1), output_range=(0, 255))

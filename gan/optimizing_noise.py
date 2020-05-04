@@ -75,6 +75,9 @@ for gen in range(num_of_generations):
     population = [DNA.crossover(choose(), choose()).mutate() if i < population_size * 0.8 else DNA.random() for i in range(population_size - 1)]
     population.append(best.copy())
 
-print(discriminator(best    .create_image()))
+print(discriminator(best.create_image()))
 best.show()
+
+np.save('./inputs/best_noise_input.npy', best.noise)
+
 plt.show()
