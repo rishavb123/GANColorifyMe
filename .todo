@@ -10,3 +10,9 @@
         - loss: MSE(generator(nn(webcam_face)), gray(webcam_face))
             - or MSE(colorify(generator(nn(webcam_face))), webcam_face)
         - make view script to pass webcam image into network and overlay generated image
+        - Scrap everything above and think about this
+        - train on generated images
+            - Generate sample with random noise:
+            - Train on
+                - input(generated image) -> output(noise)
+            - structure the network as the exact opposite of the generator network
