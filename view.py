@@ -16,9 +16,11 @@ from dataset.preproccesing import normalize
 from gan.model_path import gen_path
 from colorify.model_path import path
 
+args = sys.argv[1:]
+
 rand_start = False
-r = 0.1
-stability = 1
+r = 0.1 if len(args) < 2 else float(args[1])
+stability = 10 if len(args) < 1 else int(args[0])
 
 capture = cv2.VideoCapture(0)
 
