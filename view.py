@@ -57,4 +57,5 @@ while True:
     k = cv2.waitKey(30) & 0xff
     if k==27:
         break
+
 capture.release()
