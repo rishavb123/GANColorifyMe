@@ -48,8 +48,18 @@ def preprocess(raw, frames):
         metric = confidence[i]
         if metric > max_metric:
             max_metric = metric
-            max_ind_2 = max_ind
             max_ind = i
+
+    max_metric = 0
+
+    for i in range(len(faces)):
+        if i == max_ind:
+            continue
+        metric = confidence[i]
+        if metric > max_metric:
+            max_metric = metric
+            max_ind_2 = i
+
     for i in [max_ind, max_ind_2]:
         if i < 0:
             continue
