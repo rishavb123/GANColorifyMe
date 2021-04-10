@@ -24,12 +24,19 @@ noise = tf.random.normal([1, 100]) if rand_start else np.load('./gan/inputs/best
 count = 0
 approach = tf.random.normal([1, 100])
 
+nx, ny = 2, 4
+a, b, h = -1, 1, 0.02
+inp = np.arange(a, b + h, h).reshape(-1, 1)
+gaussian_vec_x = np.exp(- 4 * inp ** (2 * nx)).T
+gaussian_vec_y = np.exp(- 4 * inp ** (2 * ny))
+gaussian_matrix = gaussian_vec_y @ gaussian_vec_x
+gaussian_tensor = np.stack((gaussian_matrix, gaussian_matrix, gaussian_matrix), axis=2)
+
 def preprocess(raw, frames):
     global noise
     global count
     global approach
     img = frames[0]
-    t0 = time.time()
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces, _, confidence = classifier.detectMultiScale3(gray, outputRejectLevels=True, minSize=(25, 25), maxSize=(80, 80))
     max_ind = -1
@@ -52,16 +59,12 @@ def preprocess(raw, frames):
         if count >= stability:
             count = 0
             approach = tf.random.normal([1, 100])
-        # t1 = time.time()
         gen_img = colorifier(generator(noise, training=False), training=False)
-        # t2 = time.time()
         gen_img = normalize(gen_img, input_range=(-1, 1), output_range=(0, 255))
-        # t3 = time.time()
         gen_img = np.reshape(gen_img, (28,28,3))
         gen_img = cv2.resize(gen_img, (w, h))
-        img[y: y + h, x: x + w] = gen_img
-        # t4 = time.time()
-        # print(f"Find faces: {round((t1 - t0) * 1000)} ms; Generate Face: {round((t2 - t1) * 1000)} ms; Normalize: {round((t3 - t2) * 1000)} ms; Replace Image: {round((t4 - t3) * 1000)} ms; Image Shape: {img.shape}", "                                         ", end="\r")
+        weights = cv2.resize(gaussian_tensor, (w, h))
+        img[y: y + h, x: x + w] = gen_img * weights + (1 - weights) * img[y: y + h, x: x + w]
     return img
 
 camera, args = make_camera_with_args(log=False)
